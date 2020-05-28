@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
+const UserController = require('./controllers/UserController')
 
 const PORT = process.env.PORT || 8000
 
@@ -15,6 +16,8 @@ app.use(express.json())
 app.get('/', (req, res) => {
   res.send('Hello from Express')
 })
+
+app.post('/register', UserController.store)
 
 try {
   mongoose.connect(process.env.MONGO_DB_CONNECTION, {

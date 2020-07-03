@@ -4,6 +4,8 @@ const multer = require('multer')
 
 const UserController = require('./controllers/UserController')
 const HabitController = require('./controllers/HabitController')
+const DashboardController = require('./controllers/DashboardController')
+const LoginController = require('./controllers/LoginController')
 const uploadConfig = require('./config/upload')
 
 const routes = express.Router()
@@ -13,14 +15,20 @@ routes.get('/status', (req, res) => {
   res.send({ status: 200 })
 })
 
+//TODO Login controller
+//TODO Subscribe contoller (maybe not needed)
+
+//Login
+routes.post('/login', LoginController.store )
+
+//Dashboard
+routes.get('/dashboard/:habitType', DashboardController.getAllHabits)
+routes.get('/dashboard', DashboardController.getAllHabits)
+routes.get('/habit/:habitId', DashboardController.getHabitById)
+
 //Habit
-routes.get('/habits/:habitType', HabitController.getAllHabits)
-routes.get('/habits', HabitController.getAllHabits)
-routes.get('/habit/:habitId', HabitController.getHabitById)
 routes.post('/habit', upload.single("thumbnail"), HabitController.createHabit)
 routes.delete('/habit/:habitId', HabitController.delete)
-
-
 
 //User
 routes.post('/user/register', UserController.createUser)

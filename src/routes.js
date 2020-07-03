@@ -14,7 +14,13 @@ routes.get('/status', (req, res) => {
 })
 
 //Habit
+routes.get('/habits/:habitType', HabitController.getAllHabits)
+routes.get('/habits', HabitController.getAllHabits)
+routes.get('/habit/:habitId', HabitController.getHabitById)
 routes.post('/habit', upload.single("thumbnail"), HabitController.createHabit)
+routes.delete('/habit/:habitId', HabitController.delete)
+
+
 
 //User
 routes.post('/user/register', UserController.createUser)

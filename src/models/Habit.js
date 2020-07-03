@@ -6,11 +6,16 @@ const HabitSchema = new mongoose.Schema({
   points: Number,
   frequency: Object,
   isCompleteForDay: Boolean,
-  thumbnail: String,
+  habitType: String,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   }
+}, {
+  toJSON: {
+    virtuals: true
+  }
 })
+
 
 module.exports = mongoose.model('Habit', HabitSchema)

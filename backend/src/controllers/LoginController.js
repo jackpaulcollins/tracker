@@ -29,7 +29,7 @@ module.exports = {
         }
 
     } catch (error){
-        return res.status(400).json({ message: `Error while Authenticating a User ${error}` })
+        throw Error(`Error while Authenticating a User ${error}`)
     }
   }
 }

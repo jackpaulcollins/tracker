@@ -22,8 +22,8 @@ routes.get('/status', (req, res) => {
 routes.post('/login', LoginController.store )
 
 //Dashboard
-routes.get('/dashboard/:habitType', DashboardController.getAllHabits)
-routes.get('/dashboard', DashboardController.getAllHabits)
+routes.get('/dashboard/:habitType', DashboardController.getAllHabitsForUser)
+routes.get('/dashboard', DashboardController.getAllHabitsForUser)
 routes.get('/habit/:habitId', DashboardController.getHabitById)
 
 //Habit

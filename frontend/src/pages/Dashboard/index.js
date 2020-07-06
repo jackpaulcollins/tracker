@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Container } from 'reactstrap'
 import api from '../../services/api'
 import Habit from '../../Components/Habit'
@@ -21,13 +22,9 @@ export default function Dashboard() {
     })
   }, []);
 
-  console.log(habits)
-
-  
-
-
   return(
     <Container>
+      <Link to="/habits">Create a New Habit!</Link>
       <DailyPointsCounter/>
        {habits && habits.map(habit => {
           return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   Card, CardText, CardBody,
   CardTitle, Button
@@ -16,6 +16,7 @@ export default function Habit(props) {
         <CardBody>
           <CardTitle><h5>{title}</h5></CardTitle>
           <CardText>{description}</CardText>
+          <CardText>points: {points}</CardText>
           <Button>Success</Button><Button>Fail</Button>
         </CardBody>
       </Card>

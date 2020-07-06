@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Redirect } from 'react-router-dom'
 import api from '../../services/api'
 import { Container, Button, Form, Input, Label,} from 'reactstrap'
 
@@ -9,8 +10,14 @@ export default function HabitsPage() {
   const [ description, setDescription ] = useState('')
   const [ points, setPoints ] = useState('')
   const [ habitType, setHabitType ] = useState('')
+  const [ redirect, setRedirect ] = useState(false)
+  const [ errorMessage, setErrorMessage ] = useState(false)
 
   const submitHandler = async (e) => {
+
+    e.preventDefault()
+
+    //Need to handle converting points to negative if habit negative
     const user_id = localStorage.getItem('user')
     const habitData = new FormData()
     habitData.append('title', title)
@@ -18,16 +25,31 @@ export default function HabitsPage() {
     habitData.append('points', points)
     habitData.append('habitType', habitType)
 
-    if( title !== ''
-        && description !== '' 
-        && points !== '' 
-        && habitType !== ''
-        ) {
-          await api.post('/habit', habitData, {headers: {user_id }})
+    
+
+      try {
+            if ( title !== ''
+                && description !== '' 
+                && points !== '' 
+                && habitType !== ''
+            ) {
+                await api.post('/habit', habitData, {headers: {user_id }})
+                setRedirect(true)
+              } else {
+                setErrorMessage(true)
+                setTimeout(() => {
+                  setErrorMessage(false)
+                }, 2000)
+              }
+      } catch (error) {
+            console.log(error.message)
         }
-    e.preventDefault()
-    return ''
+        
   }
+
+  console.log(errorMessage)
+
+  const redirectState = redirect ? <Redirect to='/dashboard'/> : ''
 
   return(
     <Container>
@@ -60,6 +82,7 @@ export default function HabitsPage() {
         </div>
         <Button>Create a new Habit!</Button>
       </Form>
+      {redirectState}
     </Container>
   )
 }

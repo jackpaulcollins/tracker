@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import api from '../../services/api'
-import { Container, Button, Form, Input, Label,} from 'reactstrap'
+import { Container, Button, Form, Input, Label, Alert} from 'reactstrap'
 
   //Habits page will show all habits
 
@@ -44,10 +44,9 @@ export default function HabitsPage() {
       } catch (error) {
             console.log(error.message)
         }
-        
   }
 
-  console.log(errorMessage)
+  const errorMessageToDisplay = errorMessage ? <Alert color="danger">Please Fill Out all Forms!</Alert> : ''
 
   const redirectState = redirect ? <Redirect to='/dashboard'/> : ''
 
@@ -83,6 +82,7 @@ export default function HabitsPage() {
         <Button>Create a new Habit!</Button>
       </Form>
       {redirectState}
+      {errorMessageToDisplay}
     </Container>
   )
 }

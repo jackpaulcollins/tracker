@@ -15,9 +15,6 @@ routes.get('/status', (req, res) => {
   res.send({ status: 200 })
 })
 
-//TODO Login controller
-//TODO Subscribe contoller (maybe not needed)
-
 //Login
 routes.post('/login', LoginController.store )
 
@@ -28,10 +25,14 @@ routes.get('/habit/:habitId', DashboardController.getHabitById)
 
 //Habit
 routes.post('/habit', upload.single("thumbnail"), HabitController.createHabit)
-routes.delete('/habit/:habitId', HabitController.delete)
+routes.delete('/habit/:habitId', HabitController.deleteHabit)
+routes.post('/habit/:habitId', HabitController.updateHabit)
+// Temp route to test update days on habits
+routes.get('/users', HabitController.addDayToAllHabits)
 
 //User
 routes.post('/user/register', UserController.createUser)
 routes.get('/user/:userId', UserController.getUserById)
+
 
 module.exports = routes

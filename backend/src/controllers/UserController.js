@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
+const { uuid } = require('uuidv4');
 
 module.exports = {
   async createUser(req, res) {

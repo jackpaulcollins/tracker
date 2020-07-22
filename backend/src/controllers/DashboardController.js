@@ -1,50 +1,48 @@
 const Habit = require('../models/Habit')
+const User = require('../models/User')
+const { filterUserHabitArray } = require('../utils/Utils')
 
 
 module.exports = {
   async getHabitById(req, res) {
-
+    
     const { habitId } = req.params
-  
+    const { user_id } = req.headers
+
     try {
-      const habit = await Habit.findById(habitId)
-  
-      if (habit) {
+      if (user_id) {
+        const user = await User.findById(user_id)
+        const habit = filterUserHabitArray(habitId, user.habits)
         return res.json(habit)
+      } else {
+        return res.status(404).json({ message: `Cannot find that habit!` })
       }
-  
     } catch (error) {
-      return res.status(400).json({ message: `Habit does not exist` })
+      return res.status(404).json({ message: `Cannot find that habit!` })
     }
   },
   
   async getAllHabitsForUser(req, res) {
   
-    //optional filter to check if user filtering by habit type
-    const {habitType} = req.params
+    const { habitType } = req.params
     const { user_id } = req.headers
-    const query = habitType
-    // ToDo move the optional query to return habits based on type
-
-  
+    const query = habitType || null
+ 
     try {
-      //finds habits based on the logged in user
-      //checks if user is querying based on habitType and returns matching habits
-      //if they are
-      if (query) {
-        const habits = await Habit.find({user: user_id, habitType: query})
-        if (habits) {
+      if (user_id) {
+        const user = await User.findById(user_id)
+        const habits = user.habits
+        //checks for query param to filter negative vs positive habits. If present it filters based on query.
+        if (query) {
+          const habits = user.habits.filter((habit) => {
+          return habit.habitType === query
+          })
           return res.json(habits)
         }
-      } else {
-        const habits = await Habit.find({user: user_id})
-        if (habits) {
-          return res.json(habits)
-        }
-      }
-  
+        return res.json(habits)
+      }     
     } catch (error) {
-      return res.status(400).json({ message: `You don't have any habits yet!` })
+        return res.status(404).json({ message: `Unable to get your habits!` })
     }
   }
 }

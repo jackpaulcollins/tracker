@@ -3,7 +3,10 @@ const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
 const routes = require('./routes')
+const cron = require('node-cron')
 const path = require('path')
+const { addDayToAllHabits } = require('./controllers/HabitController')
+const { getCurrentDate } = require('./utils/Utils')
 
 const PORT = process.env.PORT || 8000
 
@@ -30,4 +33,13 @@ app.use(routes)
 app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`)
 })
+
+// cron job that runs every day at midnight to add date to habits array
+
+cron.schedule('0 0 0 * * *', () => {
+  const date = getCurrentDate()
+  console.log('cron addDayToAllHabits job run for ', date)
+  addDayToAllHabits()
+});
+
 

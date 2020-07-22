@@ -1,26 +1,46 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Card, CardText, CardTitle, CardBody,
 } from 'reactstrap'
+import getCurrentDate from '../services/getCurrentDate'
 
-export default function DailyPointsCounter() {
+export default function DailyPointsCounter(props) {
 
-  //This will need to be replaced by fetching the date written 
-  //to the db for past dates??
+  const [ dailyPoints, setDailyPoints ] = useState(0)
+
+  let today = getCurrentDate()
+
+  useEffect(() => {
+    console.log('render')
+    sumDailyPoints(props.habits)
+  }, [])
+
+  const sumDailyPoints = (habits) => {
+    console.log(habits)
+    //goes through all of the users habits and checks if complete for day
+    const today = getCurrentDate()
+    let i
+    for (i = 0; i < habits.length; i++){
+      let currentHabit = habits[i]
+      //new loop to go through the current habits daysComplete array
+      let j
+      console.log('here')
+      for (j = 0; j < currentHabit.daysComplete.length; j++) {
+        if (today == currentHabit.daysComplete[j].date && currentHabit.daysComplete[j].isComplete ) {
+          setDailyPoints((dailyPoints + currentHabit.points))
+        }
+      }
+    }
+  }
+
   
-let today = new Date();
-const dd = String(today.getDate()).padStart(2, '0');
-const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-const yyyy = today.getFullYear();
-
-today = mm + '/' + dd + '/' + yyyy;
 
   return (
     <div style={{display: "flex", justifyContent: "space-around", margin: "2rem"}}>
       <Card>
           <CardBody>
             <CardTitle>Daily Points for {today}</CardTitle>
-            <CardText><strong>100</strong></CardText>
+            <CardText><strong>{dailyPoints}</strong></CardText>
           </CardBody>
         </Card>
     </div>

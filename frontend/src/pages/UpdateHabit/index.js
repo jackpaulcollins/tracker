@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import api from '../../services/api'
-import getCurrentDay from '../../services/getCurrentDate'
 import { Container, Button, Form, Input, Label, Alert} from 'reactstrap'
 
-  //Habits page will show all habits
 
-export default function HabitsPage() {
+export default function UpdateHabit(props) {
   const [ title, setTitle ] = useState('')
   const [ description, setDescription ] = useState('')
   const [ points, setPoints ] = useState('')
@@ -14,23 +12,22 @@ export default function HabitsPage() {
   const [ redirect, setRedirect ] = useState(false)
   const [ errorMessage, setErrorMessage ] = useState(false)
 
+  const habitId = props.match.params.habitId
+
+  console.log(habitId)
+
   const submitHandler = async (e) => {
 
     e.preventDefault()
 
     //Need to handle converting points to negative if habit negative
     const user_id = localStorage.getItem('user')
-    const date = getCurrentDay()
-  
+    
     const habitData = {
       title,
       description,
       points,
       habitType,
-      daysComplete: [{
-        date: date,
-        isComplete: false
-      }]
     }
 
     
@@ -41,8 +38,8 @@ export default function HabitsPage() {
                 && points !== '' 
                 && habitType !== ''
             ) {
-                await api.post('/habit', habitData, {headers: {user_id }})
-                setRedirect(true)
+                await api.post(`/habit/${habitId}`, habitData, {headers: {user_id }})
+                // setRedirect(true)
               } else {
                 setErrorMessage(true)
                 setTimeout(() => {
@@ -58,9 +55,10 @@ export default function HabitsPage() {
 
   const redirectState = redirect ? <Redirect to='/dashboard'/> : ''
 
+
   return(
     <Container>
-      <h1>Create Your Habit</h1>
+      <h1>Update Your Habit</h1>
       <Form onSubmit={submitHandler}>
         <Label>Title</Label>
         <Input id='title' type='text' onChange={(e) => setTitle(e.target.value)}/>
@@ -87,7 +85,7 @@ export default function HabitsPage() {
               Negative
           </Label>
         </div>
-        <Button>Create a new Habit!</Button>
+        <Button>Update Habit!</Button>
       </Form>
       {redirectState}
       {errorMessageToDisplay}

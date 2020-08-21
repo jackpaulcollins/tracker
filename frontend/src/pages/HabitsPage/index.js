@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import api from '../../services/api'
-import getCurrentDay from '../../services/getCurrentDate'
+import { api } from '../../services/services'
+import { getCurrentDate } from '../../services/services'
 import { Container, Button, Form, Input, Label, Alert} from 'reactstrap'
 
   //Habits page will show all habits
@@ -20,17 +20,14 @@ export default function HabitsPage() {
 
     //Need to handle converting points to negative if habit negative
     const user_id = localStorage.getItem('user')
-    const date = getCurrentDay()
+    const date = getCurrentDate()
   
     const habitData = {
       title,
       description,
       points,
       habitType,
-      daysComplete: [{
-        date: date,
-        isComplete: false
-      }]
+      daysComplete: []
     }
 
     

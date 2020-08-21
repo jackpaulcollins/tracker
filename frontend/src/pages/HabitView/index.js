@@ -4,7 +4,7 @@ import {
   CardTitle, Button
 } from 'reactstrap'
 import { Link } from 'react-router-dom'
-import api from '../../services/api'
+import { api } from '../../services/services'
 
 export default function HabitView(props) {
 
@@ -41,7 +41,7 @@ export default function HabitView(props) {
                                       <CardTitle><h5>{habit.title}</h5></CardTitle>
                                       <CardText>{habit.description}</CardText>
                                       <CardText>points: {habit.points}</CardText>
-                                      <Button>Success</Button><Button>Fail</Button><Button onClick={() => deleteHabit(habit.id)}>Delete</Button>
+                                      <Button onClick={() => deleteHabit(habit.id)}>Delete</Button>
                                       <Link to={`/update/${habit.id}`}>
                                         <Button>Update</Button>
                                       </Link>

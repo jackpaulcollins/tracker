@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import api from '../../services/api'
+import { api } from '../../services/services'
 import { Container, Button, Form, Input, Label, Alert} from 'reactstrap'
 
 
@@ -38,7 +38,7 @@ export default function UpdateHabit(props) {
                 && points !== '' 
                 && habitType !== ''
             ) {
-                await api.post(`/habit/${habitId}`, habitData, {headers: {user_id }})
+                await api.post(`/habit/${habitId}`, habitData, {headers: {user_id}})
                 // setRedirect(true)
               } else {
                 setErrorMessage(true)

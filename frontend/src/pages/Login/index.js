@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import api from '../../services/api'
-import { Container, Button, Form, FormGroup, Input } from 'reactstrap'
+import { api } from '../../services/services'
+import { Container, Button, Form, FormGroup, Input, Alert } from 'reactstrap'
+import { Link } from 'react-router-dom'
 
 export default function Login({ history }) {
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState('')
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -18,10 +20,13 @@ export default function Login({ history }) {
       history.push('/dashboard')
     } else {
       const { message } = response.data
-      console.log(message)
+      setErrorMessage(message)
     }
 
   }
+
+  const errorMessageToDisplay = errorMessage ? <Alert color="danger">{errorMessage}</Alert> : ''
+
 
   return(
     <Container>
@@ -34,8 +39,12 @@ export default function Login({ history }) {
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
           <Input type="password" name="password" id="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
         </FormGroup>
-        <Button>Submit</Button>
+        <div style={{display: "flex", justifyContent: "space-around", margin: "2rem"}}>
+          <Button>Submit</Button>
+          <Link to={'/register'}><Button>Register</Button></Link>
+        </div>
      </Form>
+     {errorMessageToDisplay}
     </Container>
   )
 }

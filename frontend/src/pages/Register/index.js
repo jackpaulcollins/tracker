@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import api from '../../services/api'
+import { api } from '../../services/services'
 import { Container, Button, Form, FormGroup, Input } from 'reactstrap'
+import { Link } from 'react-router-dom'
 
 export default function Register({ history }) {
   const [ email, setEmail ] = useState('')
@@ -42,7 +43,10 @@ export default function Register({ history }) {
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
           <Input type="password" name="password" id="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
         </FormGroup>
-        <Button>Submit</Button>
+        <div style={{display: "flex", justifyContent: "space-around", margin: "2rem"}}>
+          <Button>Submit</Button>
+          <Link to={'/'}><Button>Login</Button></Link>
+        </div>
      </Form>
     </Container>
   )

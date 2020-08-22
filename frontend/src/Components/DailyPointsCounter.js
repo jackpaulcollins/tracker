@@ -2,43 +2,43 @@ import React, { useState, useEffect } from 'react'
 import {
   Card, CardText, CardTitle, CardBody,
 } from 'reactstrap'
-import getCurrentDate from '../services/services'
+import { api } from '../services/services'
+import {getCurrentDate} from '../services/services'
 
 export default function DailyPointsCounter(props) {
 
   const [ dailyPoints, setDailyPoints ] = useState(0)
 
-  let today = getCurrentDate()
-
   useEffect(() => {
-    console.log('render')
-    sumDailyPoints(props.habits)
-  }, [])
+    getDailyPoints().then(response => {
+      const points = response.data.points
+      setDailyPoints(points)
+    })
+  });
 
-  // const sumDailyPoints = (habits) => {
-  //   console.log(habits)
-  //   //goes through all of the users habits and checks if complete for day
-  //   const today = getCurrentDate()
-  //   let i
-  //   for (i = 0; i < habits.length; i++){
-  //     let currentHabit = habits[i]
-  //     //new loop to go through the current habits daysComplete array
-  //     let j
-  //     for (j = 0; j < currentHabit.daysComplete.length; j++) {
-  //       if (today == currentHabit.daysComplete[j].date && currentHabit.daysComplete[j].isComplete ) {
-  //         setDailyPoints((dailyPoints + currentHabit.points))
-  //       }
-  //     }
-  //   }
-  // }
+  const getDailyPoints = async () => {
+    const user_id = localStorage.getItem('user')
+    const data = await api.get(`/habits/dailyPoints`, {headers: {user_id }})
+    return data
+  }
 
-  
+  const today = () => {
+
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    const yyyy = String(today.getFullYear());
+    
+    today = yyyy+ '/' + mm + '/' + dd
+    
+    return today
+    }
 
   return (
     <div style={{display: "flex", justifyContent: "space-around", margin: "2rem"}}>
       <Card>
           <CardBody>
-            <CardTitle>Daily Points for {today}</CardTitle>
+            <CardTitle>Daily Points for {today()}</CardTitle>
             <CardText><strong>{dailyPoints}</strong></CardText>
           </CardBody>
         </Card>

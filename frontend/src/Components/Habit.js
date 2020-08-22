@@ -4,8 +4,7 @@ import {
   Card, CardText, CardBody,
   CardTitle, Button
 } from 'reactstrap'
-import fetch from 'node-fetch'
-import {getCurrentDate} from '../services/services'
+import { api } from '../services/services'
 import { checkIsHabitDoneForDay } from '../services/services'
 
 export default function Habit(props) {
@@ -16,14 +15,8 @@ export default function Habit(props) {
 
   const setHabitAsComplete = async (habitId) =>{
     const user_id = localStorage.getItem('user')
-    const date = getCurrentDate()
-    await fetch(`http://localhost:8000/habits/mark_complete/${habitId}/${date}`, {
-        method: 'post',
-        body: JSON.stringify(date),
-        headers: { 'user_id': user_id },
-    })
-    .then(res => res.json())
-    props.reloadHabits();
+    await api.put(`/habits/mark_complete/${habitId}`, {headers: {user_id }})
+    props.reloadHabits()
   }
 
  
@@ -32,14 +25,12 @@ export default function Habit(props) {
 
   const messageForCompleteButton = isCompleteForDay ? 'Un-complete' : 'Complete'
 
-
   return(
     <div style={{display: "flex", justifyContent: "space-around", margin: "2rem"}}>
       <Card color={cardColor}>
         <CardBody>
            <div>
             <CardTitle><h5>{title}</h5></CardTitle>
-            <Link to={{pathname: `habit/${id}`}}>View Habit</Link>
           </div>
           <CardText>{description}</CardText>
           <CardText>points: {points}</CardText>

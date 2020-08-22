@@ -40,8 +40,8 @@ export default function Login({ history }) {
           <Input type="password" name="password" id="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
         </FormGroup>
         <div style={{display: "flex", justifyContent: "space-around", margin: "2rem"}}>
-          <Button>Submit</Button>
-          <Link to={'/register'}><Button>Register</Button></Link>
+          <Button className='submit-btn'>Submit</Button>
+          <Link to={'/register'}><Button className='submit-btn'>Register</Button></Link>
         </div>
      </Form>
      {errorMessageToDisplay}

@@ -18,13 +18,7 @@ export const getCurrentDate = () => {
 
  export const checkIsHabitDoneForDay = (daysComplete) => {
     const today = getCurrentDate()
-    const todaysStatus = daysComplete.filter(day => {
-      return today == day.date
-    })
-    if(todaysStatus[0] && todaysStatus[0].isComplete) {
-      return true
-    } else {
-      return false
-    }
+    const isComplete = daysComplete.includes(today)
+    return isComplete
   }
   

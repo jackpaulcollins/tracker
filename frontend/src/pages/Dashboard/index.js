@@ -7,6 +7,7 @@ import {
   Card, CardText, CardTitle, CardBody,
 } from 'reactstrap'
 import {getCurrentDate} from '../../services/services'
+import DailyPointsCounter from '../../Components/DailyPointsCounter'
 
 
 export default function Dashboard() {
@@ -40,37 +41,34 @@ export default function Dashboard() {
 
   return(
     <Container>
-      <div style={{display: "flex", justifyContent: "space-around", margin: "2rem"}}>
+      <div className="links">
         <Link to="/habits">Create a New Habit!</Link>
-        <Link to="/dashboard/positive">See Positive Habits</Link>
-        <Link to="/dashboard/negative">See Negative Habits</Link>
+        <Link to="/dashboard/positive">Positive Habits</Link>
+        <Link to="/dashboard/negative">Negative Habits</Link>
       </div>
       <div style={{display: "flex", justifyContent: "space-around", margin: "2rem"}}>
-        <Card>
-          <CardBody>
-            <CardTitle>Daily Points for {today}</CardTitle>
-            <CardText><strong>{dailyPoints}</strong></CardText>
-          </CardBody>
-        </Card>
+        <DailyPointsCounter/>
      </div>
-
+     <div className="habit-field">
        {habits && habits.map((habit) => {
           return (
             
-              // <Link to={{pathname: `habit/${habit.id}`}}> 
-              <Habit   key={habit.id} 
-                       habit={habit}
-                       id={habit.id}
-                       title={habit.title}
-                       description={habit.description}
-                       points={habit.points}
-                       habitType={habit.habitType}
-                       reloadHabits={updateReload}
-                       />
-              // </Link> 
-              
+            
+              <Link  to={{pathname: `habit/${habit.id}`}}
+                     className="habit-clickable"> 
+                <Habit  key={habit.id} 
+                        habit={habit}
+                        id={habit.id}
+                        title={habit.title}
+                        description={habit.description}
+                        points={habit.points}
+                        habitType={habit.habitType}
+                        reloadHabits={updateReload}
+                        />
+              </Link> 
           )
         })}
+       </div>
         
     </Container>
   )

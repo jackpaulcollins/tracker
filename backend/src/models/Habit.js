@@ -4,8 +4,7 @@ const HabitSchema = new mongoose.Schema({
   title: String,
   description: String,
   points: Number,
-  frequency: Object,
-  isCompleteForDay: Boolean,
+  daysComplete: Array,
   habitType: String,
   user: {
     type: mongoose.Schema.Types.ObjectId,

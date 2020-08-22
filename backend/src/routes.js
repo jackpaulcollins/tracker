@@ -27,8 +27,8 @@ routes.get('/habit/:habitId', DashboardController.getHabitById)
 routes.post('/habit', upload.single("thumbnail"), HabitController.createHabit)
 routes.delete('/habit/:habitId', HabitController.deleteHabit)
 routes.post('/habit/:habitId', HabitController.updateHabit)
-// Temp route to test update days on habits
-routes.get('/users', HabitController.addDayToAllHabits)
+routes.put('/habits/mark_complete/:habitId', HabitController.markCompleteForDay)
+routes.get('/habits/dailyPoints', HabitController.getDailyPoints)
 
 //User
 routes.post('/user/register', UserController.createUser)

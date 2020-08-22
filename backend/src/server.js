@@ -21,6 +21,7 @@ try {
   mongoose.connect(process.env.MONGO_DB_CONNECTION, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false
   })
   console.log('Mongo DB connected')
 } catch(error) {
@@ -36,10 +37,8 @@ app.listen(PORT, () => {
 
 // cron job that runs every day at midnight to add date to habits array
 
-cron.schedule('0 0 0 * * *', () => {
-  const date = getCurrentDate()
-  console.log('cron addDayToAllHabits job run for ', date)
-  addDayToAllHabits()
-});
-
-
+// cron.schedule('0 0 0 * * *', () => {
+//   const date = getCurrentDate()
+//   console.log('cron addDayToAllHabits job run for ', date)
+//   addDayToAllHabits()
+// });

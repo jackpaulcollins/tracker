@@ -11,8 +11,7 @@ module.exports = {
 
     try {
       if (user_id) {
-        const user = await User.findById(user_id)
-        const habit = filterUserHabitArray(habitId, user.habits)
+        const habit = await Habit.findById(habitId)
         return res.json(habit)
       } else {
         return res.status(404).json({ message: `Cannot find that habit!` })
@@ -30,13 +29,11 @@ module.exports = {
  
     try {
       if (user_id) {
-        const user = await User.findById(user_id)
-        const habits = user.habits
+        const habits = await Habit.find({user: user_id})
+        
         //checks for query param to filter negative vs positive habits. If present it filters based on query.
         if (query) {
-          const habits = user.habits.filter((habit) => {
-          return habit.habitType === query
-          })
+          const habits = await Habit.find({user: user_id, habitType: query})
           return res.json(habits)
         }
         return res.json(habits)

@@ -1,6 +1,5 @@
 const User = require('../models/User')
-const { uuid } = require('uuidv4');
-const { checkIfHabitExistsForUser } = require('../utils/Utils')
+const Habit = require('../models/Habit')
 const { getCurrentDate } = require('../utils/Utils')
 
 module.exports = {
@@ -15,55 +14,37 @@ module.exports = {
 
     let { points } = req.body
 
-    //convert negative habitTypes points to negative int
+    const { user_id } = req.headers
 
     if (habitType === 'negative') {
       points = (points * -1)
     }
 
-    const { user_id } = req.headers
-
-    try {
-      
-      const user = await User.findById(user_id)
-
-      if (user) {
-        user.habits.push({
-          title, 
-          description, 
-          points, 
-          daysComplete,
-          habitType,
-          id: uuid()
-        })
-        await user.save()
-        return res.json(user)
-      } else {
-        return res.status(400).json({ message: `Error Creating Habit!` })
-      }
-    } catch (error) {
-        return res.status(400).json({ message: `Error Creating Habit!` })
-    }  
+      const habit = await Habit.create({
+        title, 
+        description,
+        daysComplete,
+        habitType,
+        points,
+        user: user_id
+      })
+      return res.json({
+        habit
+      })
   },
 
   async deleteHabit(req, res) {
     const { user_id } = req.headers
     const { habitId } = req.params
-    const user = await User.findById(user_id)
-    if (user) {
+    const habit = await Habit.findById(habitId)
+    if (user_id) {
       try {
-        let habits = user.habits
-        const checkIfHabitExists = checkIfHabitExistsForUser(habitId, habits)
-        if (checkIfHabitExists) {
-          const habitsToKeep = habits.filter((habit) => {
-            return habit.id !== habitId
-            })
-          user.habits = habitsToKeep
-          await user.save()
-          return res.json(user)
-        } else {
-          return res.status(400).json({ message: `Can't find that Habit!` })
-        }
+          if (habit) {
+            habit.deleteOne()
+            return res.json({ message: 'Succesfully Deleted Habit'})
+          } else {
+              return res.status(400).json({ message: `Can't find that Habit!` })
+          }
       } catch (error) {
           return res.status(400).json({ message: `Error Deleting Habit!` })
       }
@@ -71,33 +52,29 @@ module.exports = {
   },
 
   async updateHabit(req, res) {
+
     const { user_id } = req.headers
     const { habitId  } = req.params
     const {
       title,
       description,
       points,
-      daysComplete,
       habitType,
     } = req.body
-    
-    const user = await User.findById(user_id)
 
-    if (user) {
+    if (user_id) {
 
       try {
-        const habitIndex = user.habits.findIndex(habit => habit.id == habitId)
-        user.habits[habitIndex] = {
+       const habit = await Habit.findOneAndUpdate({_id: habitId}, 
+        {
           title,
           description,
           points,
-          daysComplete,
-          habitType,
-          id: habitId
-        }
-        user.markModified('habits')
-        await user.save()
-        return res.status(200).json(user.habits)
+          habitType
+        }, function(err, doc) {
+          if (err) return res.send(500, {error: err});
+          return res.send(habit);
+         })
       } catch (error) {
           return res.status(400).json({ message: 'Unable to update habit!'})
       }
@@ -105,27 +82,39 @@ module.exports = {
         return res.status(400).json({ message: 'Unable to update habit!'})
     }
   },
+  async markCompleteForDay(req, res){
 
-  async addDayToAllHabits() {
+    const { habitId } = req.params
+    const habit = await Habit.findById(habitId)
 
-    const users = await User.find()
-    for (i=0; i < users.length; i++) {
-      let userId = users[i].id
-      let user
-      user = await User.findById(userId)
-      for (j=0; j < user.habits.length; j++) {
+    try {
+      const today = getCurrentDate()
+      if (habit.daysComplete.includes(today)) {
+        habit.daysComplete = habit.daysComplete.filter(e => e !== today); 
+        habit.save()
+      } else {
+        habit.daysComplete.push(today)
+        habit.save()
+      }
+      
+      return res.status(200).json({ message: 'Habit Markes as Complete!'})
+     } catch (error) {
+        return res.status(400).json({ message: 'Unable to mark habit as complete!'})
+     }
+   },
 
-        if (user.habits[j]) {
-          user.habits[j].daysComplete.push({
-            date: getCurrentDate(),
-            isComplete: false
-          })
-        }
-
-        user.markModified('habits')
-        await user.save()
-       
+   async getDailyPoints(req, res) {
+    const { user_id } = req.headers
+    const habits = await Habit.find({user: user_id})
+    const today = getCurrentDate()
+    let dailyPoints = 0
+  
+    for (i = 0; i < habits.length; i++) {
+      if ( habits[i].daysComplete.includes(today)) {
+        dailyPoints += habits[i].points
       }
     }
-  }
+
+     return res.json({ points: dailyPoints })
+   }
 }

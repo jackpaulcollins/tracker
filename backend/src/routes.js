@@ -33,6 +33,8 @@ routes.get('/habits/dailyPoints', HabitController.getDailyPoints)
 //User
 routes.post('/user/register', UserController.createUser)
 routes.get('/user/:userId', UserController.getUserById)
+routes.put('/user/update_goal/:user_id/:goal', UserController.updateDailyPointsGoal)
+routes.get('/user/:user_id/goal', UserController.getDailyPointsGoal)
 
 
 module.exports = routes

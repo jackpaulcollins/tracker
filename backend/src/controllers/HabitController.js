@@ -65,7 +65,7 @@ module.exports = {
     if (user_id) {
 
       try {
-       const habit = await Habit.findOneAndUpdate({_id: habitId}, 
+       await Habit.findOneAndUpdate({_id: habitId}, 
         {
           title,
           description,
@@ -73,7 +73,7 @@ module.exports = {
           habitType
         }, function(err, doc) {
           if (err) return res.send(500, {error: err});
-          return res.send(habit);
+          return res.send(doc);
          })
       } catch (error) {
           return res.status(400).json({ message: 'Unable to update habit!'})

@@ -47,5 +47,48 @@ module.exports = {
           message: `User ID does not exist. Do you want to sign up?`
         })
     }
+  },
+
+  async updateDailyPointsGoal(req, res) {
+    
+    const { user_id, goal } = req.params
+
+    try {
+      const user = await User.findById(user_id)
+
+      user.dailyPointsGoal = goal
+
+      user.save()
+
+      return res.status(200).json({
+        message: `Goal updated!`
+      })
+
+    } catch(e) {
+
+      return res.status(400).json({
+        message: `Cannot update goal!`
+      })
+    }
+  },
+  async getDailyPointsGoal(req, res) {
+    
+    const { user_id, goal } = req.params
+
+    try {
+      const user = await User.findById(user_id)
+
+      const goal = user.dailyPointsGoal
+
+      return res.status(200).json({
+        goal: goal
+      })
+
+    } catch(e) {
+
+      return res.status(400).json({
+        message: `Cannot get daily goal!`
+      })
+    }
   }
 }
